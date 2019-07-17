@@ -5,7 +5,7 @@
 typedef int HeapType;
 
 typedef struct heap_t {
-	HeapType values[HEAPMAXSIZE];
+	HeapType *values;
 	int size;
 	int maxSize;
 } Heap;
@@ -19,6 +19,7 @@ Heap *heap_create()
 {
 	Heap *heap = (Heap *)malloc(sizeof(Heap));
 	heap->maxSize = HEAPMAXSIZE;
+	heap->values = (HeapType *)malloc(sizeof(HeapType) * heap->maxSize);
 	heap->size = 0;
 	return heap;
 }
@@ -37,6 +38,10 @@ void heap_insert(Heap *heap, HeapType val)
 {
 	int i;
 	//heap->values[heap->size++] = val;
+	if (heap->size >= heap->maxSize) {
+		heap->maxSize += 20;
+		heap->values = (HeapType *)realloc(heap->values, sizeof(HeapType) * heap->maxSize);	
+	}
 	i = heap->size;
 	heap->size++;
 	while (i != 0) {

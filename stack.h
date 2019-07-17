@@ -1,15 +1,11 @@
-#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 #define STACKMAXSIZE	100
 
-typedef struct bai {
-	int a;
-	char str[10];
-} StackType;
+typedef char StackType;
 
 typedef struct stack_t {
-	StackType values[STACKMAXSIZE];
+	StackType *values;
 	int maxSize;
 	int size;
 } Stack;
@@ -18,6 +14,7 @@ Stack * stack_create()
 {
 	Stack *stack = (Stack *)malloc(sizeof(struct stack_t));
 	stack->maxSize = STACKMAXSIZE;
+	stack->values = (StackType *)malloc(sizeof(StackType) * stack->maxSize);
 	stack->size = 0;
 	//stack->values = (StackType *)malloc(sizeof(StackType) * maxSize);
 	return stack;
@@ -31,6 +28,10 @@ void stack_destroy(Stack *stack)
 
 void stack_push(Stack *stack, StackType val)
 {
+	if (stack->size >= stack->maxSize) {
+		stack->maxSize += 20;
+		stack->values = (StackType *)realloc(stack->values, sizeof(StackType) * stack->maxSize);
+	}
 	stack->values[stack->size++] = val;
 }
 
@@ -52,3 +53,4 @@ int get_size(Stack *stack)
 {
 	return stack->size;
 }
+
