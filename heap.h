@@ -1,52 +1,69 @@
-#pragma once
-#include<stdio.h>
-#include<stdlib.h>
-#define HEAPMAXSIZE		100
-typedef int HeapType;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef char * HeapType;
 
-typedef struct heap_t {
+typedef struct {
 	HeapType *values;
 	int size;
 	int maxSize;
 } Heap;
 
-int heap_compare(HeapType *first, HeapType *second)
+/*int _heapCompare(HeapType *first, HeapType *second)
 {
 	return (int)(*first - *second);
+}*/
+int _heapCompare(HeapType *first, HeapType *second)
+{
+	int i;
+	for (i = 0; (*first)[i] != '\0' && (*second)[i] != '\0'; i++) {
+		if ((*first)[i] != (*second)[i])
+			return (int)((*first)[i] - (*second)[i]);
+	}
+	if ((*first)[i] != '\0')
+		return 1;
+	else if ((*second)[i] != '\0')
+		return -1;
+	else
+		return 0;
 }
 
-Heap *heap_create()
+Heap *heapCreate(int size)
 {
 	Heap *heap = (Heap *)malloc(sizeof(Heap));
-	heap->maxSize = HEAPMAXSIZE;
+	heap->maxSize = size;
 	heap->values = (HeapType *)malloc(sizeof(HeapType) * heap->maxSize);
 	heap->size = 0;
 	return heap;
 }
 
-void heap_destroy(Heap *heap)
+void heapDestroy(Heap *heap)
 {
+	free(heap->values);
 	free(heap);
 }
 
-int get_size(Heap *heap)
+int getSize(Heap *heap)
 {
 	return heap->size;
 }
 
-void heap_insert(Heap *heap, HeapType val)
+void heapInsert(Heap *heap, HeapType val)
 {
 	int i;
-	//heap->values[heap->size++] = val;
+	HeapType *temp = NULL;
 	if (heap->size >= heap->maxSize) {
 		heap->maxSize += 20;
-		heap->values = (HeapType *)realloc(heap->values, sizeof(HeapType) * heap->maxSize);	
+		temp = heap->values;
+		heap->values = (HeapType *)malloc(sizeof(HeapType) * heap->maxSize);
+		memcpy(heap->values, temp, sizeof(HeapType) * heap->size);
+		free(temp);
 	}
 	i = heap->size;
 	heap->size++;
 	while (i != 0) {
 		int j = (i - 1) / 2;
-		if (heap_compare(&val, &heap->values[j]) >= 0)
+		if (_heapCompare(&val, &heap->values[j]) >= 0)
 			break;
 		heap->values[i] = heap->values[j];
 		i = j;
@@ -54,7 +71,7 @@ void heap_insert(Heap *heap, HeapType val)
 	heap->values[i] = val;
 }
 
-void heap_pop(Heap *heap)
+void heapPop(Heap *heap)
 {
 	HeapType val;
 	int i, j;
@@ -69,9 +86,9 @@ void heap_pop(Heap *heap)
 	i = 0;
 	j = 2 * i + 1;
 	while (j <= heap->size - 1) {
-		if (j < heap->size - 1 && heap_compare(&heap->values[j], &heap->values[j + 1]) >= 0)
+		if (j < heap->size - 1 && _heapCompare(&heap->values[j], &heap->values[j + 1]) >= 0)
 			j = j + 1;
-		if (heap_compare(&val, &heap->values[j]) < 0)
+		if (_heapCompare(&val, &heap->values[j]) < 0)
 			break;
 		heap->values[i] = heap->values[j];
 		i = j;
@@ -80,7 +97,7 @@ void heap_pop(Heap *heap)
 	heap->values[i] = val;
 }
 
-HeapType heap_peek(Heap *heap)
+HeapType heapPeek(Heap *heap)
 {
 	return heap->values[0];
 }
