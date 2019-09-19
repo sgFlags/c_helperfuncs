@@ -13,7 +13,7 @@ typedef struct {
 {
 	return (int)(*first - *second);
 }*/
-int _heapCompare(HeapType *first, HeapType *second)
+inline int _heapCompare(HeapType *first, HeapType *second)
 {
 	int i;
 	for (i = 0; (*first)[i] != '\0' && (*second)[i] != '\0'; i++) {
@@ -43,7 +43,7 @@ void heapDestroy(Heap *heap)
 	free(heap);
 }
 
-int getSize(Heap *heap)
+inline int getSize(Heap *heap)
 {
 	return heap->size;
 }
@@ -97,7 +97,7 @@ void heapPop(Heap *heap)
 	heap->values[i] = val;
 }
 
-HeapType heapPeek(Heap *heap)
+inline HeapType heapPeek(Heap *heap)
 {
 	return heap->values[0];
 }
