@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef char * VECTORTYPE;
+typedef int VectorType;
 
 typedef struct {
-	VECTORTYPE *values;
+	VectorType *values;
 	int maxSize;
 	int size;
 } Vector;
@@ -12,30 +12,37 @@ typedef struct {
 Vector *vectorCreate(int size)
 {
 	Vector *vector = (Vector *)malloc(sizeof(Vector));
-	vector->values = (VECTORTYPE *)malloc(sizeof(VECTORTYPE) * size);
+	vector->values = (VectorType *)malloc(sizeof(VectorType) * size);
 	vector->size = 0;
 	vector->maxSize = size;
 	return vector;
 }
 
-inline void vectorAdd(Vector *vector, VECTORTYPE value)
+inline void *vectorDestroy(Vector *vector)
 {
-	VECTORTYPE *temp;
+	free(vector->values);
+	free(vector);
+}
+
+inline void vectorAdd(Vector *vector, VectorType value)
+{
+	VectorType *temp = NULL;
 	if (vector->size >= vector->maxSize) {
 		vector->maxSize += 20;
 		temp = vector->values;
-		vector->values = (VECTORTYPE *)malloc(sizeof(VECTORTYPE) * vector->maxSize);
-		memcpy(vector->values, temp, sizeof(VECTORTYPE) * vector->size);
+		vector->values = (VectorType *)malloc(sizeof(VectorType) * vector->maxSize);
+		memcpy(vector->values, temp, sizeof(VectorType) * vector->size);
+		free(temp);
 	}
 	vector->values[vector->size++] = value;
 }
 
-inline VECTORTYPE vectorGet(Vector *vector, int index)
+inline VectorType vectorGet(Vector *vector, int index)
 {
 	return vector->values[index];
 }
 
-inline VECTORTYPE vectorPeek(Vector *vector)
+inline VectorType vectorPeek(Vector *vector)
 {
 	return vector->values[vector->size - 1];
 }
