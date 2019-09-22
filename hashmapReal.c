@@ -9,7 +9,7 @@ typedef int KeyType;
 typedef struct hashnode_t {
     HashType val;
     struct hashnode_t *next;
-    KeyType realKey;
+    KeyType key;
 } HashNode;
 
 typedef struct hashhead_t {
@@ -22,6 +22,20 @@ typedef struct hashmap_t {
     int length;
     int size;
 } HashMap;
+
+void hashmapForEach(HashMap *map)
+{
+    int i;
+    HashNode *node;
+    HashType *value;
+    for (i = 0; i < map->size; i++) {
+        node = map->values[i].first;
+        while (node) {
+            printf("key = %d val = %d\n", node->key, node->val);
+            node = node->next;
+        }
+    }
+}
 
 /*static inline uint _hashmapHash(KeyType key)
 {
@@ -39,12 +53,12 @@ static inline int _hashmapKeyEqual(KeyType key1, KeyType key2)
     return !strcmp(key1, key2);
 }
 
-static inline void _hashmapRealkeyCopy(HashNode *node, KeyType key)
+static inline void _hashmapKeyCopy(HashNode *node, KeyType key)
 {
     int size;
     size = strlen(key) + 1;
-    node->realKey = (char *)malloc(size);
-    strcpy(node->realKey, key);
+    node->key = (char *)malloc(size);
+    strcpy(node->key, key);
 }*/
 
 static inline uint _hashmapHash(KeyType key)
@@ -57,9 +71,9 @@ static inline int _hashmapKeyEqual(KeyType key1, KeyType key2)
 	return key1 == key2;
 }
 
-static inline void _hashmapRealkeyCopy(HashNode *node, KeyType key)
+static inline void _hashmapKeyCopy(HashNode *node, KeyType key)
 {
-	node->realKey = key;
+	node->key = key;
 }
 
 HashMap *hashmapCreate(int size)
@@ -84,25 +98,25 @@ void hashmapPut(HashMap *map, KeyType key, HashType val)
         node = (HashNode *)malloc(sizeof(HashNode));
         node->next = NULL;
         node->val = val;
-        _hashmapRealkeyCopy(node, key);
+        _hashmapKeyCopy(node, key);
         map->values[index].first = node;
     } else {
         curr = map->values[index].first;
         while (curr->next) {
-            if (_hashmapKeyEqual(key, curr->realKey)) {
+            if (_hashmapKeyEqual(key, curr->key)) {
                 curr->val = val;
                 return;
             }
             curr = curr->next;
         }
-        if (_hashmapKeyEqual(key, curr->realKey)) {
+        if (_hashmapKeyEqual(key, curr->key)) {
             curr->val = val;
             return;
         }
         node = (HashNode *)malloc(sizeof(HashNode));
         node->next = NULL;
         node->val = val;
-        _hashmapRealkeyCopy(node, key);
+        _hashmapKeyCopy(node, key);
         curr->next = node;
     }
     map->values[index].size++;
@@ -122,7 +136,7 @@ void hashmapRemove(HashMap *map, KeyType key)
     if (!map->values[index].size) {
         return;
     }
-    if (_hashmapKeyEqual(map->values[index].first->realKey, key)) {
+    if (_hashmapKeyEqual(map->values[index].first->key, key)) {
         temp = map->values[index].first;
         map->values[index].first = temp->next;
         free(temp);
@@ -132,7 +146,7 @@ void hashmapRemove(HashMap *map, KeyType key)
     }
     node = map->values[index].first;
     while (node->next) {
-        if (_hashmapKeyEqual(node->next->realKey, key)) {
+        if (_hashmapKeyEqual(node->next->key, key)) {
             temp = node->next;
             node->next = temp->next;
             free(temp);
@@ -149,7 +163,7 @@ HashType *hashmapGet(HashMap *map, KeyType key)
     uint index = _hashmapHash(key) % map->length;
     HashNode *node = map->values[index].first;
     while (node) {
-        if (_hashmapKeyEqual(node->realKey, key))
+        if (_hashmapKeyEqual(node->key, key))
             return &node->val;
         node = node->next;
     }
