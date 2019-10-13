@@ -18,7 +18,7 @@ Vector *vectorCreate(int size)
 	return vector;
 }
 
-static inline void *vectorDestroy(Vector *vector)
+static inline void vectorDestroy(Vector *vector)
 {
 	free(vector->values);
 	free(vector);
