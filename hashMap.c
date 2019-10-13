@@ -29,22 +29,22 @@ HashMap *hashMapCreate(int size)
 	return map;
 }
 
-inline int _hash(HashMap *map, HashKeyType key)
+static inline int _hash(HashMap *map, HashKeyType key)
 {
 	return (key > 0 ? key : -key) % map->maxSize;
 }
 
-inline int _keyEqual(HashKeyType key1, HashKeyType key2)
+static inline int _keyEqual(HashKeyType key1, HashKeyType key2)
 {
 	return key1 == key2 ? 1 : 0;
 }
 
-inline void _keyCopy(HashNode *node, HashKeyType *src)
+static inline void _keyCopy(HashNode *node, HashKeyType *src)
 {
 	node->realKey = *src;
 }
 
-inline void hashMapPut(HashMap *map, HashKeyType key, HashValueType value)
+static inline void hashMapPut(HashMap *map, HashKeyType key, HashValueType value)
 {
 	int index = _hash(map, key);
 	while (map->nodes[index].valid &&
@@ -59,7 +59,7 @@ inline void hashMapPut(HashMap *map, HashKeyType key, HashValueType value)
 	map->nodes[index].valid = 1;
 }
 
-inline int hashMapGetIndex(HashMap *map, HashKeyType key)
+static inline int hashMapGetIndex(HashMap *map, HashKeyType key)
 {
 	int index = _hash(map, key);
 	int times = 0;
@@ -74,7 +74,7 @@ inline int hashMapGetIndex(HashMap *map, HashKeyType key)
 	return index;
 }
 
-inline HashValueType *hashMapGet(HashMap *map, HashKeyType key)
+static inline HashValueType *hashMapGet(HashMap *map, HashKeyType key)
 {
 	int index = hashMapGetIndex(map, key);
 	if (index < 0)
@@ -82,7 +82,7 @@ inline HashValueType *hashMapGet(HashMap *map, HashKeyType key)
 	return &map->nodes[index].value;
 }
 
-inline void hashMapRemove(HashMap *map, HashKeyType key)
+static inline void hashMapRemove(HashMap *map, HashKeyType key)
 {
 	if (map->size <= 0)
 		return;
@@ -93,7 +93,7 @@ inline void hashMapRemove(HashMap *map, HashKeyType key)
 	}
 }
 
-inline int getSize(HashMap *map)
+static inline int getSize(HashMap *map)
 {
 	return map->size;
 }
