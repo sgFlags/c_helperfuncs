@@ -18,13 +18,13 @@ Vector *vectorCreate(int size)
 	return vector;
 }
 
-inline void *vectorDestroy(Vector *vector)
+static inline void *vectorDestroy(Vector *vector)
 {
 	free(vector->values);
 	free(vector);
 }
 
-inline void vectorAdd(Vector *vector, VectorType value)
+static inline void vectorAdd(Vector *vector, VectorType value)
 {
 	VectorType *temp = NULL;
 	if (vector->size >= vector->maxSize) {
@@ -37,22 +37,22 @@ inline void vectorAdd(Vector *vector, VectorType value)
 	vector->values[vector->size++] = value;
 }
 
-inline VectorType vectorGet(Vector *vector, int index)
+static inline VectorType vectorGet(Vector *vector, int index)
 {
 	return vector->values[index];
 }
 
-inline VectorType vectorPeek(Vector *vector)
+static inline VectorType vectorPeek(Vector *vector)
 {
 	return vector->values[vector->size - 1];
 }
 
-inline void vectorPop(Vector *vector)
+static inline void vectorPop(Vector *vector)
 {
 	vector->size--;
 }
 
-inline int getSize(Vector *vector)
+static inline int getSize(Vector *vector)
 {
 	return vector->size;
 }
