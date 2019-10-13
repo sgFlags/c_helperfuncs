@@ -40,6 +40,7 @@ static inline void _dequeRealloc(Deque *deque)
 	memcpy(&deque->values[secondHalf], temp, firstHalf * sizeof(DequeType));
 	deque->head = 0;
 	deque->tail = deque->size - 1;
+	free(temp);
 }
 
 static inline void dequeAddHead(Deque *deque, DequeType value)
