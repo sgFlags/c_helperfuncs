@@ -32,7 +32,7 @@ static inline void _dequeRealloc(Deque *deque)
 	DequeType *temp = NULL;
 	int firstHalf = deque->head;
 	int secondHalf = deque->maxSize - deque->head;
-	deque->maxSize += 5;
+	deque->maxSize += 100;
 	temp = deque->values;
 	deque->values = (DequeType *)malloc(sizeof(DequeType) * deque->maxSize);
 	/* bai change */
